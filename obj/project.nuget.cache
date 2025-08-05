@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZGVxcwCVeGM=",
+  "success": true,
+  "projectFilePath": "/Users/jose/Documents/IonInnovationsApp/IonInnovationsApp.csproj",
+  "expectedPackageFiles": [
+    "/Users/jose/.nuget/packages/microsoft.aspnetcore.spaproxy/9.0.0/microsoft.aspnetcore.spaproxy.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.aspnetcore.spaservices.extensions/9.0.0/microsoft.aspnetcore.spaservices.extensions.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.extensions.fileproviders.abstractions/9.0.0/microsoft.extensions.fileproviders.abstractions.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.extensions.fileproviders.physical/9.0.0/microsoft.extensions.fileproviders.physical.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.extensions.filesystemglobbing/9.0.0/microsoft.extensions.filesystemglobbing.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.extensions.primitives/9.0.0/microsoft.extensions.primitives.9.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
