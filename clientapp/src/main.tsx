@@ -4,7 +4,8 @@ import './index.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // Temporarily disable StrictMode for webcam development
+  // <StrictMode>
     <App />
-  </StrictMode>,
+  // </StrictMode>,
 )

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import WebcamView from '../compontents/WebcamView';
 
 // Mock data interfaces
 interface FocusPoint {
@@ -76,7 +77,7 @@ const IrisUI = () => {
           <div className="col-span-4 space-y-4">
             
             {/* Manual Controls */}
-            <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg bg-blue-500">
+            <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg">
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Manual Controls</h3>
               <div className="p-4">
                 <div className="grid grid-cols-9 grid-rows-7 gap-1 h-64">
@@ -307,12 +308,12 @@ const IrisUI = () => {
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg h-full">
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Current View</h3>
               <div className="p-4 h-full flex items-center justify-center">
-                <div className="bg-[#2a2a2a] border-2 border-dashed border-gray-600 rounded-lg w-full h-96 flex items-center justify-center">
-                  <div className="text-center text-gray-400">
-                    <div className="text-4xl mb-2">📷</div>
-                    <div>Camera View</div>
-                    <div className="text-sm">640x480</div>
-                  </div>
+                <div className="w-full h-96">
+                  <WebcamView 
+                    width={640} 
+                    height={480} 
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </div>

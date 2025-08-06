@@ -31,8 +31,6 @@ const Home = () => {
       setLoading(false)
     }
   }
-  console.log("weather",weather)
-  console.log("count",count)
 
   return (
     <div className="min-h-screen bg-[#242424] text-white flex flex-col items-center justify-center">
@@ -62,7 +60,7 @@ const Home = () => {
           </p>
           <Component1 />
           
-          <div className="mt-6 space-x-4">
+          <div className="mt-6 space-x-4 flex flex-wrap justify-center gap-4">
             <Link 
               to="/test" 
               className="inline-block bg-[#646cff] hover:bg-[#535bf2] text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
@@ -74,6 +72,12 @@ const Home = () => {
               className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
             >
               IrisUI Interface →
+            </Link>
+            <Link 
+              to="/iris-cv" 
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🔬 IrisUI with OpenCV →
             </Link>
           </div>
         </div>
