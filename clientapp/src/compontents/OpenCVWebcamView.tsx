@@ -1,5 +1,11 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import cv from 'opencv-ts';
+
+// Declare opencv-ts types for global access
+declare global {
+  interface Window {
+    cv: any;
+  }
+}
 
 /**
  * OpenCVWebcamView Component
@@ -33,14 +39,38 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [currentMode, setCurrentMode] = useState(processingMode);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>();
 
   // Initialize OpenCV
   useEffect(() => {
     const initOpenCV = async () => {
       try {
         console.log('Initializing OpenCV...');
-        await cv.ready;
+        
+        // Load OpenCV.js from CDN if not already loaded
+        if (!window.cv) {
+          const script = document.createElement('script');
+          script.src = 'https://docs.opencv.org/4.8.0/opencv.js';
+          script.async = true;
+          document.head.appendChild(script);
+          
+          await new Promise((resolve, reject) => {
+            script.onload = resolve;
+            script.onerror = reject;
+          });
+        }
+        
+        // Wait for OpenCV to be ready
+        await new Promise<void>((resolve) => {
+          if (window.cv?.getBuildInformation) {
+            resolve();
+          } else {
+            window.cv = {
+              onRuntimeInitialized: () => resolve()
+            };
+          }
+        });
+        
         console.log('OpenCV.js is ready!');
         setIsOpenCVReady(true);
       } catch (err) {
@@ -54,7 +84,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
 
   // Process video frame with OpenCV
   const processFrame = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !isOpenCVReady || !isStreaming) {
+    if (!videoRef.current || !canvasRef.current || !isOpenCVReady || !isStreaming || !window.cv) {
       return;
     }
 
@@ -79,6 +109,8 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
         return;
       }
 
+      const cv = window.cv;
+      
       // Get image data for OpenCV processing
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const src = cv.matFromImageData(imageData);

@@ -3,6 +3,9 @@ import Home from './pages/Home'
 import Test from './pages/Test'
 import IrisUI from './pages/IrisUI'
 import IrisUICV from './pages/IrisUICV'
+import IrisUICVBackend from './pages/IrisUICV-backend-compatable'
+import IrisUICVReal from './pages/IrisUICV-backend-not-mocked'
+import IrisUICVWithCamera from './pages/IrisUICV-with-camera'
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/iris" element={<IrisUI />} />
         <Route path="/iris-cv" element={<IrisUICV />} />
+        <Route path="/iris-cv-backend" element={<IrisUICVBackend />} />
+        <Route path="/iris-cv-real" element={<IrisUICVReal />} />
+        <Route path="/iris-cv-industrial" element={<IrisUICVWithCamera />} />
       </Routes>
     </Router>
   )

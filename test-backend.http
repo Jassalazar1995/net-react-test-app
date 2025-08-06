@@ -1,0 +1,65 @@
+# Test file for Movement API endpoints
+# Use with REST Client extension in VS Code or similar tools
+
+### Health Check
+GET http://localhost:5241/api/Movement/Health
+
+### Get Current Position
+GET http://localhost:5241/api/Movement/Position
+
+### Test Small X Movement
+POST http://localhost:5241/api/Movement/Command
+Content-Type: application/json
+
+{
+  "action": "move",
+  "axis": "X",
+  "direction": "positive",
+  "stepSize": "small"
+}
+
+### Test Large Y Movement
+POST http://localhost:5241/api/Movement/Command
+Content-Type: application/json
+
+{
+  "action": "move",
+  "axis": "Y",
+  "direction": "negative",
+  "stepSize": "large"
+}
+
+### Test Set Position
+POST http://localhost:5241/api/Movement/Command
+Content-Type: application/json
+
+{
+  "action": "setPosition",
+  "stepSize": "large",
+  "targetPosition": {
+    "x": 10.5,
+    "y": 20.3,
+    "z": 5.2
+  }
+}
+
+### Test Home Command
+POST http://localhost:5241/api/Movement/Command
+Content-Type: application/json
+
+{
+  "action": "home",
+  "stepSize": "large"
+}
+
+### Test Auto Focus
+POST http://localhost:5241/api/Movement/Command
+Content-Type: application/json
+
+{
+  "action": "autofocus",
+  "stepSize": "large"
+}
+
+### Check Movement Status (replace {movementId} with actual ID from previous responses)
+GET http://localhost:5241/api/Movement/Status/mov_123456789_abcdef12

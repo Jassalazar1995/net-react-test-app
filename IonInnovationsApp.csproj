@@ -13,6 +13,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.0" />
+    <PackageReference Include="OpenCvSharp4" Version="4.11.0.20250507" />
+    <PackageReference Include="OpenCvSharp4.runtime.osx.10.15-x64" Version="4.6.0.20230105" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <!-- TODO: Add Vimba.NET package when available -->
+    <!-- <PackageReference Include="Vimba.NET" Version="6.0.0" /> -->
   </ItemGroup>
 
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZGVxcwCVeGM=",
+  "dgSpecHash": "umVAvQAo2Wk=",
   "success": true,
   "projectFilePath": "/Users/jose/Documents/IonInnovationsApp/IonInnovationsApp.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,12 @@
     "/Users/jose/.nuget/packages/microsoft.extensions.fileproviders.abstractions/9.0.0/microsoft.extensions.fileproviders.abstractions.9.0.0.nupkg.sha512",
     "/Users/jose/.nuget/packages/microsoft.extensions.fileproviders.physical/9.0.0/microsoft.extensions.fileproviders.physical.9.0.0.nupkg.sha512",
     "/Users/jose/.nuget/packages/microsoft.extensions.filesystemglobbing/9.0.0/microsoft.extensions.filesystemglobbing.9.0.0.nupkg.sha512",
-    "/Users/jose/.nuget/packages/microsoft.extensions.primitives/9.0.0/microsoft.extensions.primitives.9.0.0.nupkg.sha512"
+    "/Users/jose/.nuget/packages/microsoft.extensions.primitives/9.0.0/microsoft.extensions.primitives.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/microsoft.win32.systemevents/9.0.0/microsoft.win32.systemevents.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/opencvsharp4/4.11.0.20250507/opencvsharp4.4.11.0.20250507.nupkg.sha512",
+    "/Users/jose/.nuget/packages/opencvsharp4.runtime.osx.10.15-x64/4.6.0.20230105/opencvsharp4.runtime.osx.10.15-x64.4.6.0.20230105.nupkg.sha512",
+    "/Users/jose/.nuget/packages/system.drawing.common/9.0.0/system.drawing.common.9.0.0.nupkg.sha512",
+    "/Users/jose/.nuget/packages/system.memory/4.6.3/system.memory.4.6.3.nupkg.sha512"
   ],
   "logs": []
 }

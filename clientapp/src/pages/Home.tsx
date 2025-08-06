@@ -79,6 +79,24 @@ const Home = () => {
             >
               🔬 IrisUI with OpenCV →
             </Link>
+            <Link 
+              to="/iris-cv-backend" 
+              className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🌐 IrisUI + OpenCV + Backend →
+            </Link>
+            <Link 
+              to="/iris-cv-real" 
+              className="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🚀 Real ASP.NET Backend →
+            </Link>
+            <Link 
+              to="/iris-cv-industrial" 
+              className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🏭 Allied Vision Industrial Camera →
+            </Link>
           </div>
         </div>
 

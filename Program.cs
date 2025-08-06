@@ -2,6 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Register Movement Service
+builder.Services.AddSingleton<IonInnovationsApp.Services.IMovementService, IonInnovationsApp.Services.MovementService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",

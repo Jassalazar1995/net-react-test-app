@@ -105,3 +105,10 @@
 /Users/jose/Documents/IonInnovationsApp/obj/Debug/net9.0/IonInnovationsApp.pdb
 /Users/jose/Documents/IonInnovationsApp/obj/Debug/net9.0/IonInnovationsApp.genruntimeconfig.cache
 /Users/jose/Documents/IonInnovationsApp/obj/Debug/net9.0/ref/IonInnovationsApp.dll
+/Users/jose/Documents/IonInnovationsApp/obj/Debug/net9.0/IonInnovationsApp.sourcelink.json
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/Microsoft.Win32.SystemEvents.dll
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/System.Drawing.Common.dll
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/System.Private.Windows.Core.dll
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/OpenCvSharp.dll
+/Users/jose/Documents/IonInnovationsApp/bin/Debug/net9.0/runtimes/osx-x64/native/libOpenCvSharpExtern.dylib
