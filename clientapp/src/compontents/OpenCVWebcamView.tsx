@@ -39,52 +39,86 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [currentMode, setCurrentMode] = useState(processingMode);
-  const animationFrameRef = useRef<number | undefined>();
+  const animationFrameRef = useRef<number | null>(null);
 
-  // Initialize OpenCV
+  // Initialize OpenCV loading locally first, then CDN fallbacks
   useEffect(() => {
+    let cancelled = false;
+
+    const sources = [
+      { scriptUrl: '/opencv/opencv.js', locateBase: '/opencv/' },
+      { scriptUrl: 'https://docs.opencv.org/4.x/opencv.js', locateBase: 'https://docs.opencv.org/4.x/' },
+      { scriptUrl: 'https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/opencv.js', locateBase: 'https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/' },
+      { scriptUrl: 'https://unpkg.com/opencv.js@1.2.1/opencv.js', locateBase: 'https://unpkg.com/opencv.js@1.2.1/' },
+    ];
+
+    const loadFrom = (scriptUrl: string, locateBase: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector('script[data-opencv]') as HTMLScriptElement | null;
+        if (existing) existing.remove();
+
+        (window as any).cv = (window as any).cv || {};
+        (window as any).cv.locateFile = (file: string) => `${locateBase}${file}`;
+        (window as any).cv.onRuntimeInitialized = () => {
+          if (!cancelled) {
+            setIsOpenCVReady(true);
+            setError(null);
+            resolve();
+          }
+        };
+
+        const script = document.createElement('script');
+        script.src = scriptUrl;
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-opencv', 'true');
+        script.onerror = () => reject(new Error(`Failed to load ${scriptUrl}`));
+        document.head.appendChild(script);
+
+        // Timeout fallback
+        setTimeout(() => {
+          if (!window.cv || !window.cv.getBuildInformation) {
+            reject(new Error('OpenCV initialization timeout'));
+          }
+        }, 10000);
+      });
+    };
+
     const initOpenCV = async () => {
       try {
-        console.log('Initializing OpenCV...');
-        
-        // Load OpenCV.js from CDN if not already loaded
-        if (!window.cv) {
-          const script = document.createElement('script');
-          script.src = 'https://docs.opencv.org/4.8.0/opencv.js';
-          script.async = true;
-          document.head.appendChild(script);
-          
-          await new Promise((resolve, reject) => {
-            script.onload = resolve;
-            script.onerror = reject;
-          });
+        if (window.cv?.getBuildInformation) {
+          if (!cancelled) setIsOpenCVReady(true);
+          return;
         }
-        
-        // Wait for OpenCV to be ready
-        await new Promise<void>((resolve) => {
-          if (window.cv?.getBuildInformation) {
-            resolve();
-          } else {
-            window.cv = {
-              onRuntimeInitialized: () => resolve()
-            };
+
+        let lastError: unknown = null;
+        for (const src of sources) {
+          try {
+            await loadFrom(src.scriptUrl, src.locateBase);
+            console.log(`OpenCV loaded from: ${src.scriptUrl}`);
+            return;
+          } catch (err) {
+            console.warn(err);
+            lastError = err;
           }
-        });
-        
-        console.log('OpenCV.js is ready!');
-        setIsOpenCVReady(true);
+        }
+        if (!cancelled) setError('Failed to load OpenCV.js');
+        console.error('OpenCV load failed from all sources:', lastError);
       } catch (err) {
         console.error('Failed to initialize OpenCV:', err);
-        setError('Failed to initialize OpenCV');
+        if (!cancelled) setError('Failed to initialize OpenCV');
       }
     };
 
     initOpenCV();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Process video frame with OpenCV
   const processFrame = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !isOpenCVReady || !isStreaming || !window.cv) {
+    if (!videoRef.current || !canvasRef.current || !isStreaming) {
       return;
     }
 
@@ -93,6 +127,8 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
     const ctx = canvas.getContext('2d');
 
     if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
+      // Re-schedule until metadata is available
+      animationFrameRef.current = requestAnimationFrame(processFrame);
       return;
     }
 
@@ -104,19 +140,14 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
       // Draw video frame to canvas
       ctx.drawImage(video, 0, 0);
 
-      if (currentMode === 'none') {
-        // No processing, just show original
-        return;
-      }
+      if (currentMode !== 'none' && isOpenCVReady && window.cv) {
+        const cv = window.cv;
+        // Get image data for OpenCV processing
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const src = cv.matFromImageData(imageData);
+        let dst = new cv.Mat();
 
-      const cv = window.cv;
-      
-      // Get image data for OpenCV processing
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const src = cv.matFromImageData(imageData);
-      let dst = new cv.Mat();
-
-      switch (currentMode) {
+        switch (currentMode) {
         case 'edges':
           // Canny edge detection
           cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
@@ -160,14 +191,15 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
 
         default:
           dst = src.clone();
+        }
+
+        // Draw processed image back to canvas
+        cv.imshow(canvas, dst);
+
+        // Clean up
+        src.delete();
+        dst.delete();
       }
-
-      // Draw processed image back to canvas
-      cv.imshow(canvas, dst);
-
-      // Clean up
-      src.delete();
-      dst.delete();
     } catch (err) {
       console.error('OpenCV processing error:', err);
     }
@@ -197,19 +229,31 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
         video.srcObject = mediaStream;
         setStream(mediaStream);
 
-        video.onloadedmetadata = () => {
-          video.play().then(() => {
+        const playVideo = async () => {
+          try {
+            await video.play();
             console.log('OpenCV video playing successfully');
             setIsStreaming(true);
-            // Start OpenCV processing
-            if (isOpenCVReady) {
-              processFrame();
-            }
-          }).catch((playError) => {
+            if (isOpenCVReady) processFrame();
+          } catch (playError) {
             console.error('Error playing video:', playError);
             setError('Failed to start video playback');
-          });
+          }
         };
+
+        if (video.readyState >= 2) {
+          playVideo();
+        } else {
+          const tryPlay = () => {
+            if (video.readyState >= 2) {
+              playVideo();
+              video.removeEventListener('loadedmetadata', tryPlay);
+              video.removeEventListener('canplay', tryPlay);
+            }
+          };
+          video.addEventListener('loadedmetadata', tryPlay);
+          video.addEventListener('canplay', tryPlay);
+        }
       }
     } catch (err) {
       console.error('Error accessing webcam for OpenCV:', err);
@@ -225,7 +269,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
     console.log('Stopping OpenCV webcam...');
 
     // Stop animation frame
-    if (animationFrameRef.current) {
+    if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
     }
 
@@ -252,7 +296,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
       processFrame();
     }
     return () => {
-      if (animationFrameRef.current) {
+      if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
@@ -295,6 +339,13 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
             className="w-full h-full object-cover rounded-lg bg-black"
             style={{ maxWidth: '100%', maxHeight: '100%' }}
           />
+
+          {/* Debug overlay bottom-right */}
+          <div className="absolute bottom-4 right-4 text-[11px] text-gray-300 bg-black/50 rounded px-2 py-1">
+            <div>cv: {String(isOpenCVReady)}</div>
+            <div>video: {videoRef.current?.videoWidth || 0}×{videoRef.current?.videoHeight || 0}</div>
+            <div>mode: {currentMode}</div>
+          </div>
 
           {/* Show start button overlay when not streaming */}
           {!isStreaming && (

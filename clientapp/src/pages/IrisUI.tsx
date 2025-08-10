@@ -1,57 +1,17 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import WebcamView from '../compontents/WebcamView';
-
-// Mock data interfaces
-interface FocusPoint {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface CornerPoint {
-  x: number;
-  y: number;
-}
-
-interface ClassificationResult {
-  index: number;
-  category: number;
-  length: number;
-  width: number;
-  area: number;
-  angle: number;
-  centerRectX: number;
-  centerRectY: number;
-}
+import { useIrisViewModel } from '../viewmodels/useIrisViewModel';
 
 const IrisUI = () => {
-  // State for various controls
-  const [xPos, setXPos] = useState('0.00');
-  const [yPos, setYPos] = useState('0.00');
-  const [zPos, setZPos] = useState('0.00');
-  const [isLiveMode, setIsLiveMode] = useState(false);
-  const [isBrightOnly, setIsBrightOnly] = useState(false);
-  const [selectedSettingsTab, setSelectedSettingsTab] = useState(0);
-  const [selectedResultsTab, setSelectedResultsTab] = useState(0);
-
-  // Mock data
-  const focusPoints: FocusPoint[] = [
-    { x: 10.5, y: 20.3, z: 5.2 },
-    { x: 15.2, y: 25.1, z: 5.1 },
-  ];
-
-  const cornerPoints: CornerPoint[] = [
-    { x: 0.0, y: 0.0 },
-    { x: 100.0, y: 0.0 },
-    { x: 100.0, y: 100.0 },
-    { x: 0.0, y: 100.0 },
-  ];
-
-  const classificationResults: ClassificationResult[] = [
-    { index: 1, category: 1, length: 2.5, width: 1.2, area: 3.0, angle: 45, centerRectX: 50.2, centerRectY: 75.1 },
-    { index: 2, category: 2, length: 3.1, width: 0.8, area: 2.48, angle: 90, centerRectX: 60.5, centerRectY: 80.3 },
-  ];
+  const {
+    xPos, yPos, zPos,
+    isLiveMode, isBrightOnly,
+    selectedSettingsTab, selectedResultsTab,
+    focusPoints, cornerPoints, classificationResults,
+    setXPos, setYPos, setZPos,
+    setIsLiveMode, setIsBrightOnly,
+    setSelectedSettingsTab, setSelectedResultsTab,
+  } = useIrisViewModel('none');
 
   const settingsTabs = ['Manual Controls', 'Autofocus', 'Scanning', 'Classification', 'Hardware'];
   const resultsTabs = ['Focus/Corners', 'Classification'];

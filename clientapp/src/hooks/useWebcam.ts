@@ -8,7 +8,7 @@ interface UseWebcamOptions {
 }
 
 interface UseWebcamReturn {
-  videoRef: React.RefObject<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   isStreaming: boolean;
   error: string | null;
   startWebcam: () => Promise<void>;
@@ -93,7 +93,7 @@ export const useWebcam = ({
           }
         };
 
-        // Add event listeners
+        // Add event listeners (ensure we remove the exact same handlers later)
         video.addEventListener('canplay', handleCanPlay);
         video.addEventListener('loadedmetadata', handleLoadedMetadata);
 
@@ -133,9 +133,7 @@ export const useWebcam = ({
     if (videoRef.current) {
       const video = videoRef.current;
       video.srcObject = null;
-      // Remove any event listeners that might still be attached
-      video.removeEventListener('canplay', () => {});
-      video.removeEventListener('loadedmetadata', () => {});
+      // Note: event listeners are removed in the start handlers after play
     }
     setIsStreaming(false);
   }, [stream]);
@@ -166,17 +164,13 @@ export const useWebcam = ({
     }
   }, [autoStart, startWebcam]);
 
-  // Cleanup on unmount - but be careful with React Strict Mode
+  // Cleanup on unmount
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      // Only cleanup in production or when actually unmounting
-      if (process.env.NODE_ENV === 'production') {
-        console.log('Component unmounting, cleaning up webcam...');
-        if (stream && stream.active) {
-          stream.getTracks().forEach(track => track.stop());
-        }
+      if (stream && stream.active) {
+        stream.getTracks().forEach(track => track.stop());
       }
     };
   }, [stream]);

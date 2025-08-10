@@ -1,102 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import OpenCVWebcamView from '../compontents/OpenCVWebcamView';
-
-// Mock data interfaces
-interface FocusPoint {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface CornerPoint {
-  x: number;
-  y: number;
-}
-
-interface ClassificationResult {
-  index: number;
-  category: number;
-  length: number;
-  width: number;
-  area: number;
-  angle: number;
-  centerRectX: number;
-  centerRectY: number;
-}
+import { useIrisViewModel } from '../viewmodels/useIrisViewModel';
 
 const IrisUICV = () => {
-  // State for various controls
-  const [xPos, setXPos] = useState('0.00');
-  const [yPos, setYPos] = useState('0.00');
-  const [zPos, setZPos] = useState('0.00');
-  const [isLiveMode, setIsLiveMode] = useState(false);
-  const [isBrightOnly, setIsBrightOnly] = useState(false);
-  const [selectedSettingsTab, setSelectedSettingsTab] = useState(0);
-  const [selectedResultsTab, setSelectedResultsTab] = useState(0);
-  const [processingMode, setProcessingMode] = useState<'none' | 'edges' | 'contours' | 'threshold' | 'blur'>('none');
-
-  // Console state
-  const [consoleMessages, setConsoleMessages] = useState<string[]>([
-    '[INFO] System initialized',
-    '[INFO] Camera connected',
-    '[INFO] Ready for operation'
-  ]);
-
-  // Manual controls disable state
-  const [manualControlsDisabled, setManualControlsDisabled] = useState(false);
-
-  // Console ref for auto-scrolling
-  const consoleEndRef = useRef<HTMLDivElement>(null);
-
-  // Console logging function
-  const logToConsole = (message: string, type: 'INFO' | 'WARN' | 'ERROR' | 'SUCCESS' = 'INFO') => {
-    const timestamp = new Date().toLocaleTimeString();
-    const formattedMessage = `[${type}] ${timestamp} - ${message}`;
-    setConsoleMessages(prev => [...prev, formattedMessage].slice(-50)); // Keep last 50 messages
-  };
-
-  // Auto-scroll console to bottom when new messages are added
-  useEffect(() => {
-    consoleEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [consoleMessages]);
-
-  // Handle manual control actions with temporary disable
-  const handleManualControl = (action: string, isLargeStep: boolean = false, messageType: 'INFO' | 'WARN' | 'ERROR' | 'SUCCESS' = 'INFO') => {
-    if (manualControlsDisabled) {
-      logToConsole('Manual controls are busy, please wait...', 'WARN');
-      return;
-    }
-
-    logToConsole(action, messageType);
-    setManualControlsDisabled(true);
-
-    const disableDuration = isLargeStep ? 1000 : 500; // 1 second for large steps, 0.5 seconds for small steps
-    logToConsole(`Manual controls locked for ${disableDuration}ms`, 'WARN');
-
-    setTimeout(() => {
-      setManualControlsDisabled(false);
-      logToConsole('Manual controls unlocked', 'SUCCESS');
-    }, disableDuration);
-  };
-
-  // Mock data
-  const focusPoints: FocusPoint[] = [
-    { x: 10.5, y: 20.3, z: 5.2 },
-    { x: 15.2, y: 25.1, z: 5.1 },
-  ];
-
-  const cornerPoints: CornerPoint[] = [
-    { x: 0.0, y: 0.0 },
-    { x: 100.0, y: 0.0 },
-    { x: 100.0, y: 100.0 },
-    { x: 0.0, y: 100.0 },
-  ];
-
-  const classificationResults: ClassificationResult[] = [
-    { index: 1, category: 1, length: 2.5, width: 1.2, area: 3.0, angle: 45, centerRectX: 50.2, centerRectY: 75.1 },
-    { index: 2, category: 2, length: 3.1, width: 0.8, area: 2.48, angle: 90, centerRectX: 60.5, centerRectY: 80.3 },
-  ];
+  const {
+    xPos, yPos, zPos,
+    isLiveMode, isBrightOnly,
+    selectedSettingsTab, selectedResultsTab,
+    processingMode,
+    consoleMessages, manualControlsDisabled,
+    focusPoints, cornerPoints, classificationResults,
+    setXPos, setYPos, setZPos,
+    setIsLiveMode, setIsBrightOnly,
+    setSelectedSettingsTab, setSelectedResultsTab,
+    setProcessingMode,
+    handleManualControl,
+    clearConsole,
+    log,
+    consoleEndRef,
+  } = useIrisViewModel('none');
 
   const settingsTabs = ['Manual Controls', 'Autofocus', 'Scanning', 'Classification', 'Hardware'];
   const resultsTabs = ['Focus/Corners', 'Classification'];
@@ -141,7 +63,7 @@ const IrisUICV = () => {
                       onChange={(e) => {
                         setXPos(e.target.value);
                         if (e.target.value !== xPos) {
-                          logToConsole(`X position changed to: ${e.target.value}`, 'INFO');
+                          log(`X position changed to: ${e.target.value}`, 'INFO');
                         }
                       }}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
@@ -153,7 +75,7 @@ const IrisUICV = () => {
                       onChange={(e) => {
                         setYPos(e.target.value);
                         if (e.target.value !== yPos) {
-                          logToConsole(`Y position changed to: ${e.target.value}`, 'INFO');
+                          log(`Y position changed to: ${e.target.value}`, 'INFO');
                         }
                       }}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
@@ -165,7 +87,7 @@ const IrisUICV = () => {
                       onChange={(e) => {
                         setZPos(e.target.value);
                         if (e.target.value !== zPos) {
-                          logToConsole(`Z position changed to: ${e.target.value}`, 'INFO');
+                          log(`Z position changed to: ${e.target.value}`, 'INFO');
                         }
                       }}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
@@ -199,7 +121,7 @@ const IrisUICV = () => {
                       onClick={() => {
                         const newLiveMode = !isLiveMode;
                         setIsLiveMode(newLiveMode);
-                        logToConsole(`Live mode ${newLiveMode ? 'started' : 'stopped'}`, newLiveMode ? 'SUCCESS' : 'WARN');
+                        log(`Live mode ${newLiveMode ? 'started' : 'stopped'}`, newLiveMode ? 'SUCCESS' : 'WARN');
                       }}
                       className={`w-full py-1 px-2 rounded text-sm transition-colors ${isLiveMode ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
                         } text-white`}
@@ -207,7 +129,7 @@ const IrisUICV = () => {
                       {isLiveMode ? 'STOP LIVE' : 'START LIVE'}
                     </button>
                     <button
-                      onClick={() => logToConsole('Camera feed refreshed', 'INFO')}
+                      onClick={() => log('Camera feed refreshed', 'INFO')}
                       className="w-full bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-sm transition-colors"
                     >
                       REFRESH
@@ -219,7 +141,7 @@ const IrisUICV = () => {
                         onChange={(e) => {
                           const checked = e.target.checked;
                           setIsBrightOnly(checked);
-                          logToConsole(`Bright Only mode ${checked ? 'enabled' : 'disabled'}`, 'INFO');
+                          log(`Bright Only mode ${checked ? 'enabled' : 'disabled'}`, 'INFO');
                         }}
                         className="rounded"
                       />
@@ -356,7 +278,7 @@ const IrisUICV = () => {
 
                   {/* Additional Controls */}
                   <button
-                    onClick={() => handleManualControl('Auto focus initiated', true, 'SUCCESS')}
+                      onClick={() => handleManualControl('Auto focus initiated', true, 'SUCCESS')}
                     disabled={manualControlsDisabled}
                     className={`col-span-2 col-start-3 row-start-5 rounded text-xs transition-colors ${manualControlsDisabled
                         ? 'bg-orange-800 text-orange-300 cursor-not-allowed'
@@ -366,7 +288,7 @@ const IrisUICV = () => {
                     AUTO FOCUS
                   </button>
                   <button
-                    onClick={() => logToConsole('Image saved to disk', 'SUCCESS')}
+                      onClick={() => log('Image saved to disk', 'SUCCESS')}
                     className="col-span-2 col-start-8 row-start-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs transition-colors"
                   >
                     SAVE IMAGE
@@ -386,7 +308,7 @@ const IrisUICV = () => {
                       key={index}
                       onClick={() => {
                         setSelectedSettingsTab(index);
-                        logToConsole(`Settings tab changed to: ${tab}`, 'INFO');
+                        log(`Settings tab changed to: ${tab}`, 'INFO');
                       }}
                       className={`px-3 py-1 text-xs rounded transition-colors ${selectedSettingsTab === index
                           ? 'bg-blue-600 text-white'
@@ -470,13 +392,13 @@ const IrisUICV = () => {
                       </div>
                       <div className="space-y-1">
                         <button
-                          onClick={() => logToConsole('All classification rules reloaded', 'SUCCESS')}
+                          onClick={() => log('All classification rules reloaded', 'SUCCESS')}
                           className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           RELOAD ALL RULES
                         </button>
                         <button
-                          onClick={() => logToConsole('Bright classification rules loaded', 'SUCCESS')}
+                          onClick={() => log('Bright classification rules loaded', 'SUCCESS')}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           LOAD BRIGHT RULES
@@ -494,13 +416,13 @@ const IrisUICV = () => {
                       </div>
                       <div className="space-y-1">
                         <button
-                          onClick={() => logToConsole('Camera loaded successfully', 'SUCCESS')}
+                          onClick={() => log('Camera loaded successfully', 'SUCCESS')}
                           className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           LOAD CAMERA
                         </button>
                         <button
-                          onClick={() => logToConsole('Configuration saved', 'SUCCESS')}
+                          onClick={() => log('Configuration saved', 'SUCCESS')}
                           className="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           SAVE CONFIG AS
@@ -516,11 +438,8 @@ const IrisUICV = () => {
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg h-32">
               <div className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 flex justify-between items-center">
                 <h3 className="font-semibold">Console</h3>
-                <button
-                  onClick={() => {
-                    setConsoleMessages([]);
-                    logToConsole('Console cleared', 'INFO');
-                  }}
+                    <button
+                      onClick={clearConsole}
                   className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs transition-colors"
                 >
                   Clear
@@ -576,10 +495,10 @@ const IrisUICV = () => {
                   <label className="text-sm text-gray-300 mb-2 block">Processing Mode:</label>
                   <select
                     value={processingMode}
-                    onChange={(e) => {
+                       onChange={(e) => {
                       const newMode = e.target.value as any;
                       setProcessingMode(newMode);
-                      logToConsole(`Processing mode changed to: ${newMode}`, 'INFO');
+                      log(`Processing mode changed to: ${newMode}`, 'INFO');
                     }}
                     className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-3 py-2 text-white"
                   >
@@ -593,19 +512,19 @@ const IrisUICV = () => {
 
                 {/* Action Buttons */}
                 <button
-                  onClick={() => logToConsole('Scan started', 'SUCCESS')}
+                  onClick={() => log('Scan started', 'SUCCESS')}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   START SCAN
                 </button>
                 <button
-                  onClick={() => logToConsole('Classification process initiated', 'SUCCESS')}
+                  onClick={() => log('Classification process initiated', 'SUCCESS')}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   CLASSIFY
                 </button>
                 <button
-                  onClick={() => logToConsole('Analysis started', 'SUCCESS')}
+                  onClick={() => log('Analysis started', 'SUCCESS')}
                   className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   ANALYZE
@@ -643,7 +562,7 @@ const IrisUICV = () => {
                       key={index}
                       onClick={() => {
                         setSelectedResultsTab(index);
-                        logToConsole(`Results tab changed to: ${tab}`, 'INFO');
+                        log(`Results tab changed to: ${tab}`, 'INFO');
                       }}
                       className={`px-3 py-1 text-xs rounded transition-colors ${selectedResultsTab === index
                           ? 'bg-blue-600 text-white'
@@ -675,7 +594,7 @@ const IrisUICV = () => {
                               {focusPoints.map((point, index) => (
                                 <tr
                                   key={index}
-                                  onClick={() => logToConsole(`Focus point selected: X:${point.x}, Y:${point.y}, Z:${point.z}`, 'INFO')}
+                                   onClick={() => log(`Focus point selected: X:${point.x}, Y:${point.y}, Z:${point.z}`, 'INFO')}
                                   className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                                 >
                                   <td className="px-2 py-1">{point.x}</td>
@@ -703,7 +622,7 @@ const IrisUICV = () => {
                               {cornerPoints.map((point, index) => (
                                 <tr
                                   key={index}
-                                  onClick={() => logToConsole(`Corner point selected: X:${point.x}, Y:${point.y}`, 'INFO')}
+                                   onClick={() => log(`Corner point selected: X:${point.x}, Y:${point.y}`, 'INFO')}
                                   className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                                 >
                                   <td className="px-2 py-1">{point.x}</td>
@@ -735,7 +654,7 @@ const IrisUICV = () => {
                             {classificationResults.map((result, index) => (
                               <tr
                                 key={index}
-                                onClick={() => logToConsole(`Classification result selected: Code ${result.category.toString().padStart(2, '0')}, Area: ${result.area}`, 'INFO')}
+                                 onClick={() => log(`Classification result selected: Code ${result.category.toString().padStart(2, '0')}, Area: ${result.area}`, 'INFO')}
                                 className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                               >
                                 <td className="px-2 py-1">{result.category.toString().padStart(2, '0')}</td>
