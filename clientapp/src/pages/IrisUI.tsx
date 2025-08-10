@@ -62,8 +62,8 @@ const IrisUI = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Defect Analyzer - IrisUI</h1>
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="bg-[#646cff] hover:bg-[#535bf2] text-white px-4 py-2 rounded transition-colors duration-200"
           >
             ← Back to Home
@@ -72,35 +72,35 @@ const IrisUI = () => {
 
         {/* Main Layout - 3 columns */}
         <div className="grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
-          
+
           {/* First Column - Controls and Settings */}
           <div className="col-span-4 space-y-4">
-            
+
             {/* Manual Controls */}
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg">
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Manual Controls</h3>
               <div className="p-4">
                 <div className="grid grid-cols-9 grid-rows-7 gap-1 h-64">
-                  
+
                   {/* Position Controls */}
                   <div className="col-span-2 col-start-3 row-span-3 space-y-1">
-                    <input 
-                      type="text" 
-                      value={xPos} 
+                    <input
+                      type="text"
+                      value={xPos}
                       onChange={(e) => setXPos(e.target.value)}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="X Position"
                     />
-                    <input 
-                      type="text" 
-                      value={yPos} 
+                    <input
+                      type="text"
+                      value={yPos}
                       onChange={(e) => setYPos(e.target.value)}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="Y Position"
                     />
-                    <input 
-                      type="text" 
-                      value={zPos} 
+                    <input
+                      type="text"
+                      value={zPos}
                       onChange={(e) => setZPos(e.target.value)}
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="Z Position"
@@ -115,11 +115,10 @@ const IrisUI = () => {
 
                   {/* Live Mode Controls */}
                   <div className="col-span-2 col-start-8 row-span-3 space-y-1">
-                    <button 
+                    <button
                       onClick={() => setIsLiveMode(!isLiveMode)}
-                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${
-                        isLiveMode ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
-                      } text-white`}
+                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${isLiveMode ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
+                        } text-white`}
                     >
                       {isLiveMode ? 'STOP LIVE' : 'START LIVE'}
                     </button>
@@ -127,8 +126,8 @@ const IrisUI = () => {
                       REFRESH
                     </button>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={isBrightOnly}
                         onChange={(e) => setIsBrightOnly(e.target.checked)}
                         className="rounded"
@@ -143,13 +142,13 @@ const IrisUI = () => {
                   <button className="col-start-1 row-start-3 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">Z++</button>
                   <button className="col-start-1 row-start-5 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">Z-</button>
                   <button className="col-start-1 row-start-6 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">Z--</button>
-                  
+
                   {/* Y Controls */}
                   <button className="col-start-6 row-start-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">↑</button>
                   <button className="col-start-6 row-start-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-bold transition-colors">↑↑↑</button>
                   <button className="col-start-6 row-start-5 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">↓</button>
                   <button className="col-start-6 row-start-6 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-bold transition-colors">↓↓↓</button>
-                  
+
                   {/* X Controls */}
                   <button className="col-start-4 row-start-4 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-bold transition-colors">←←←</button>
                   <button className="col-start-5 row-start-4 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs transition-colors">←</button>
@@ -177,11 +176,10 @@ const IrisUI = () => {
                     <button
                       key={index}
                       onClick={() => setSelectedSettingsTab(index)}
-                      className={`px-3 py-1 text-xs rounded transition-colors ${
-                        selectedSettingsTab === index 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-3 py-1 text-xs rounded transition-colors ${selectedSettingsTab === index
+                          ? 'bg-blue-600 text-white'
                           : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>
@@ -309,9 +307,9 @@ const IrisUI = () => {
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Current View</h3>
               <div className="p-4 h-full flex items-center justify-center">
                 <div className="w-full h-96">
-                  <WebcamView 
-                    width={640} 
-                    height={480} 
+                  <WebcamView
+                    width={640}
+                    height={480}
                     className="w-full h-full"
                   />
                 </div>
@@ -321,7 +319,7 @@ const IrisUI = () => {
 
           {/* Third Column - Process and Results */}
           <div className="col-span-4 space-y-4">
-            
+
             {/* Process */}
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg">
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Process</h3>
@@ -354,11 +352,10 @@ const IrisUI = () => {
                     <button
                       key={index}
                       onClick={() => setSelectedResultsTab(index)}
-                      className={`px-3 py-1 text-xs rounded transition-colors ${
-                        selectedResultsTab === index 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-3 py-1 text-xs rounded transition-colors ${selectedResultsTab === index
+                          ? 'bg-blue-600 text-white'
                           : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>

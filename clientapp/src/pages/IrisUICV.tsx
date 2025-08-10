@@ -35,7 +35,7 @@ const IrisUICV = () => {
   const [selectedSettingsTab, setSelectedSettingsTab] = useState(0);
   const [selectedResultsTab, setSelectedResultsTab] = useState(0);
   const [processingMode, setProcessingMode] = useState<'none' | 'edges' | 'contours' | 'threshold' | 'blur'>('none');
-  
+
   // Console state
   const [consoleMessages, setConsoleMessages] = useState<string[]>([
     '[INFO] System initialized',
@@ -67,13 +67,13 @@ const IrisUICV = () => {
       logToConsole('Manual controls are busy, please wait...', 'WARN');
       return;
     }
-    
+
     logToConsole(action, messageType);
     setManualControlsDisabled(true);
-    
+
     const disableDuration = isLargeStep ? 1000 : 500; // 1 second for large steps, 0.5 seconds for small steps
     logToConsole(`Manual controls locked for ${disableDuration}ms`, 'WARN');
-    
+
     setTimeout(() => {
       setManualControlsDisabled(false);
       logToConsole('Manual controls unlocked', 'SUCCESS');
@@ -107,8 +107,8 @@ const IrisUICV = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Defect Analyzer - IrisUI with OpenCV</h1>
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="bg-[#646cff] hover:bg-[#535bf2] text-white px-4 py-2 rounded transition-colors duration-200"
           >
             ← Back to Home
@@ -117,10 +117,10 @@ const IrisUICV = () => {
 
         {/* Main Layout - 3 columns */}
         <div className="grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
-          
+
           {/* First Column - Controls and Settings */}
           <div className="col-span-4 space-y-4">
-            
+
             {/* Manual Controls */}
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg">
               <div className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 flex justify-between items-center">
@@ -132,12 +132,12 @@ const IrisUICV = () => {
               </div>
               <div className="p-4">
                 <div className="grid grid-cols-9 grid-rows-7 gap-1 h-64">
-                  
+
                   {/* Position Controls */}
                   <div className="col-span-2 col-start-3 row-span-3 space-y-1">
-                    <input 
-                      type="text" 
-                      value={xPos} 
+                    <input
+                      type="text"
+                      value={xPos}
                       onChange={(e) => {
                         setXPos(e.target.value);
                         if (e.target.value !== xPos) {
@@ -147,9 +147,9 @@ const IrisUICV = () => {
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="X Position"
                     />
-                    <input 
-                      type="text" 
-                      value={yPos} 
+                    <input
+                      type="text"
+                      value={yPos}
                       onChange={(e) => {
                         setYPos(e.target.value);
                         if (e.target.value !== yPos) {
@@ -159,9 +159,9 @@ const IrisUICV = () => {
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="Y Position"
                     />
-                    <input 
-                      type="text" 
-                      value={zPos} 
+                    <input
+                      type="text"
+                      value={zPos}
                       onChange={(e) => {
                         setZPos(e.target.value);
                         if (e.target.value !== zPos) {
@@ -171,25 +171,23 @@ const IrisUICV = () => {
                       className="w-full bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-sm"
                       placeholder="Z Position"
                     />
-                    <button 
+                    <button
                       onClick={() => handleManualControl(`Position set to X:${xPos}, Y:${yPos}, Z:${zPos}`, true, 'SUCCESS')}
                       disabled={manualControlsDisabled}
-                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${
-                        manualControlsDisabled 
-                          ? 'bg-blue-800 text-blue-300 cursor-not-allowed' 
+                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${manualControlsDisabled
+                          ? 'bg-blue-800 text-blue-300 cursor-not-allowed'
                           : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
+                        }`}
                     >
                       SET XYZ
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleManualControl('Moving to home position', true)}
                       disabled={manualControlsDisabled}
-                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${
-                        manualControlsDisabled 
-                          ? 'bg-green-800 text-green-300 cursor-not-allowed' 
+                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${manualControlsDisabled
+                          ? 'bg-green-800 text-green-300 cursor-not-allowed'
                           : 'bg-green-600 hover:bg-green-700 text-white'
-                      }`}
+                        }`}
                     >
                       HOME
                     </button>
@@ -197,27 +195,26 @@ const IrisUICV = () => {
 
                   {/* Live Mode Controls */}
                   <div className="col-span-2 col-start-8 row-span-3 space-y-1">
-                    <button 
+                    <button
                       onClick={() => {
                         const newLiveMode = !isLiveMode;
                         setIsLiveMode(newLiveMode);
                         logToConsole(`Live mode ${newLiveMode ? 'started' : 'stopped'}`, newLiveMode ? 'SUCCESS' : 'WARN');
                       }}
-                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${
-                        isLiveMode ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
-                      } text-white`}
+                      className={`w-full py-1 px-2 rounded text-sm transition-colors ${isLiveMode ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
+                        } text-white`}
                     >
                       {isLiveMode ? 'STOP LIVE' : 'START LIVE'}
                     </button>
-                    <button 
+                    <button
                       onClick={() => logToConsole('Camera feed refreshed', 'INFO')}
                       className="w-full bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-sm transition-colors"
                     >
                       REFRESH
                     </button>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={isBrightOnly}
                         onChange={(e) => {
                           const checked = e.target.checked;
@@ -232,156 +229,143 @@ const IrisUICV = () => {
 
                   {/* Movement Controls */}
                   {/* Z Controls */}
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Z axis moved up (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-1 row-start-2 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-1 row-start-2 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     Z+
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Z axis moved up (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-1 row-start-3 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-1 row-start-3 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     Z++
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Z axis moved down (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-1 row-start-5 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-1 row-start-5 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     Z-
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Z axis moved down (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-1 row-start-6 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-1 row-start-6 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     Z--
                   </button>
-                  
+
                   {/* Y Controls */}
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Y axis moved up (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-6 row-start-2 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-6 row-start-2 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ↑
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Y axis moved up (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-6 row-start-1 rounded text-xs font-bold transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-6 row-start-1 rounded text-xs font-bold transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ↑↑↑
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Y axis moved down (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-6 row-start-5 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-6 row-start-5 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ↓
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Y axis moved down (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-6 row-start-6 rounded text-xs font-bold transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-6 row-start-6 rounded text-xs font-bold transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ↓↓↓
                   </button>
-                  
+
                   {/* X Controls */}
-                  <button 
+                  <button
                     onClick={() => handleManualControl('X axis moved left (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-4 row-start-4 rounded text-xs font-bold transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-4 row-start-4 rounded text-xs font-bold transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ←←←
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('X axis moved left (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-5 row-start-4 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-5 row-start-4 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     ←
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('X axis moved right (small step)', false)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-7 row-start-4 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-7 row-start-4 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     →
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleManualControl('X axis moved right (large step)', true)}
                     disabled={manualControlsDisabled}
-                    className={`col-start-8 row-start-4 rounded text-xs font-bold transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                    className={`col-start-8 row-start-4 rounded text-xs font-bold transition-colors ${manualControlsDisabled
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-600 hover:bg-gray-700 text-white'
-                    }`}
+                      }`}
                   >
                     →→→
                   </button>
 
                   {/* Additional Controls */}
-                  <button 
+                  <button
                     onClick={() => handleManualControl('Auto focus initiated', true, 'SUCCESS')}
                     disabled={manualControlsDisabled}
-                    className={`col-span-2 col-start-3 row-start-5 rounded text-xs transition-colors ${
-                      manualControlsDisabled 
-                        ? 'bg-orange-800 text-orange-300 cursor-not-allowed' 
+                    className={`col-span-2 col-start-3 row-start-5 rounded text-xs transition-colors ${manualControlsDisabled
+                        ? 'bg-orange-800 text-orange-300 cursor-not-allowed'
                         : 'bg-orange-600 hover:bg-orange-700 text-white'
-                    }`}
+                      }`}
                   >
                     AUTO FOCUS
                   </button>
-                  <button 
+                  <button
                     onClick={() => logToConsole('Image saved to disk', 'SUCCESS')}
                     className="col-span-2 col-start-8 row-start-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs transition-colors"
                   >
@@ -404,11 +388,10 @@ const IrisUICV = () => {
                         setSelectedSettingsTab(index);
                         logToConsole(`Settings tab changed to: ${tab}`, 'INFO');
                       }}
-                      className={`px-3 py-1 text-xs rounded transition-colors ${
-                        selectedSettingsTab === index 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-3 py-1 text-xs rounded transition-colors ${selectedSettingsTab === index
+                          ? 'bg-blue-600 text-white'
                           : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>
@@ -486,13 +469,13 @@ const IrisUICV = () => {
                         <input type="text" className="bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-xs" defaultValue="64" />
                       </div>
                       <div className="space-y-1">
-                        <button 
+                        <button
                           onClick={() => logToConsole('All classification rules reloaded', 'SUCCESS')}
                           className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           RELOAD ALL RULES
                         </button>
-                        <button 
+                        <button
                           onClick={() => logToConsole('Bright classification rules loaded', 'SUCCESS')}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
@@ -510,13 +493,13 @@ const IrisUICV = () => {
                         <input type="text" className="bg-[#2a2a2a] border border-gray-600 rounded px-2 py-1 text-xs" defaultValue="640" />
                       </div>
                       <div className="space-y-1">
-                        <button 
+                        <button
                           onClick={() => logToConsole('Camera loaded successfully', 'SUCCESS')}
                           className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
                           LOAD CAMERA
                         </button>
-                        <button 
+                        <button
                           onClick={() => logToConsole('Configuration saved', 'SUCCESS')}
                           className="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded text-xs transition-colors"
                         >
@@ -533,7 +516,7 @@ const IrisUICV = () => {
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg h-32">
               <div className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 flex justify-between items-center">
                 <h3 className="font-semibold">Console</h3>
-                <button 
+                <button
                   onClick={() => {
                     setConsoleMessages([]);
                     logToConsole('Console cleared', 'INFO');
@@ -546,15 +529,14 @@ const IrisUICV = () => {
               <div className="p-4 h-20 overflow-y-auto">
                 <div className="text-xs font-mono space-y-1">
                   {consoleMessages.map((message, index) => (
-                    <div 
-                      key={index} 
-                      className={`${
-                        message.includes('[INFO]') ? 'text-green-400' :
-                        message.includes('[WARN]') ? 'text-yellow-400' :
-                        message.includes('[ERROR]') ? 'text-red-400' :
-                        message.includes('[SUCCESS]') ? 'text-blue-400' :
-                        'text-gray-300'
-                      }`}
+                    <div
+                      key={index}
+                      className={`${message.includes('[INFO]') ? 'text-green-400' :
+                          message.includes('[WARN]') ? 'text-yellow-400' :
+                            message.includes('[ERROR]') ? 'text-red-400' :
+                              message.includes('[SUCCESS]') ? 'text-blue-400' :
+                                'text-gray-300'
+                        }`}
                     >
                       {message}
                     </div>
@@ -571,9 +553,9 @@ const IrisUICV = () => {
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">Current View</h3>
               <div className="p-4 h-full flex items-center justify-center">
                 <div className="w-full h-96">
-                  <OpenCVWebcamView 
-                    width={640} 
-                    height={480} 
+                  <OpenCVWebcamView
+                    width={640}
+                    height={480}
                     className="w-full h-full"
                     processingMode={processingMode}
                   />
@@ -584,7 +566,7 @@ const IrisUICV = () => {
 
           {/* Third Column - Process and Results */}
           <div className="col-span-4 space-y-4">
-            
+
             {/* Process */}
             <div className="bg-[#1a1a1a] border border-gray-600 rounded-lg">
               <h3 className="bg-[#2a2a2a] px-4 py-2 border-b border-gray-600 font-semibold">OpenCV Processing</h3>
@@ -592,8 +574,8 @@ const IrisUICV = () => {
                 {/* Processing Mode Selection */}
                 <div>
                   <label className="text-sm text-gray-300 mb-2 block">Processing Mode:</label>
-                  <select 
-                    value={processingMode} 
+                  <select
+                    value={processingMode}
                     onChange={(e) => {
                       const newMode = e.target.value as any;
                       setProcessingMode(newMode);
@@ -610,25 +592,25 @@ const IrisUICV = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <button 
+                <button
                   onClick={() => logToConsole('Scan started', 'SUCCESS')}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   START SCAN
                 </button>
-                <button 
+                <button
                   onClick={() => logToConsole('Classification process initiated', 'SUCCESS')}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   CLASSIFY
                 </button>
-                <button 
+                <button
                   onClick={() => logToConsole('Analysis started', 'SUCCESS')}
                   className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors"
                 >
                   ANALYZE
                 </button>
-                
+
                 {/* Processing Info */}
                 <div className="bg-[#2a2a2a] rounded p-3">
                   <div className="text-sm text-gray-300 mb-2">Current Mode: <span className="text-blue-400">{processingMode}</span></div>
@@ -663,11 +645,10 @@ const IrisUICV = () => {
                         setSelectedResultsTab(index);
                         logToConsole(`Results tab changed to: ${tab}`, 'INFO');
                       }}
-                      className={`px-3 py-1 text-xs rounded transition-colors ${
-                        selectedResultsTab === index 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-3 py-1 text-xs rounded transition-colors ${selectedResultsTab === index
+                          ? 'bg-blue-600 text-white'
                           : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#3a3a3a]'
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>
@@ -692,8 +673,8 @@ const IrisUICV = () => {
                             </thead>
                             <tbody>
                               {focusPoints.map((point, index) => (
-                                <tr 
-                                  key={index} 
+                                <tr
+                                  key={index}
                                   onClick={() => logToConsole(`Focus point selected: X:${point.x}, Y:${point.y}, Z:${point.z}`, 'INFO')}
                                   className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                                 >
@@ -720,8 +701,8 @@ const IrisUICV = () => {
                             </thead>
                             <tbody>
                               {cornerPoints.map((point, index) => (
-                                <tr 
-                                  key={index} 
+                                <tr
+                                  key={index}
                                   onClick={() => logToConsole(`Corner point selected: X:${point.x}, Y:${point.y}`, 'INFO')}
                                   className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                                 >
@@ -752,8 +733,8 @@ const IrisUICV = () => {
                           </thead>
                           <tbody>
                             {classificationResults.map((result, index) => (
-                              <tr 
-                                key={index} 
+                              <tr
+                                key={index}
                                 onClick={() => logToConsole(`Classification result selected: Code ${result.category.toString().padStart(2, '0')}, Area: ${result.area}`, 'INFO')}
                                 className="border-t border-gray-600 hover:bg-[#3a3a3a] cursor-pointer"
                               >

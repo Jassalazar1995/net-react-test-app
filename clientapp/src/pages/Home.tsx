@@ -43,13 +43,13 @@ const Home = () => {
             <img src={reactLogo} className="h-24 w-24 animate-[spin_20s_linear_infinite]" alt="React logo" />
           </a>
         </div>
-        
+
         <h1 className="text-[3.2em] leading-tight font-normal mb-8">
           Ion Innovations - C# + React
         </h1>
-        
+
         <div className="p-8 mb-8">
-          <button 
+          <button
             onClick={() => setCount((count) => count + 1)}
             className="rounded-lg border border-transparent px-5 py-2.5 text-base font-medium bg-[#1a1a1a] cursor-pointer transition-colors duration-200 hover:border-[#646cff] mb-4"
           >
@@ -59,25 +59,37 @@ const Home = () => {
             Edit <code className="bg-gray-700 px-2 py-1 rounded text-sm">src/App.tsx</code> and save to test HMR
           </p>
           <Component1 />
-          
+
           <div className="mt-6 space-x-4 flex flex-wrap justify-center gap-4">
-            <Link 
-              to="/test" 
+            <Link
+              to="/test"
               className="inline-block bg-[#646cff] hover:bg-[#535bf2] text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
             >
               Go to Test Page →
             </Link>
-            <Link 
-              to="/iris" 
+            <Link
+              to="/iris"
               className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
             >
               IrisUI Interface →
             </Link>
-            <Link 
-              to="/iris-cv" 
+            <Link
+              to="/iris-cv"
               className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
             >
               🔬 IrisUI with OpenCV →
+            </Link>
+            <Link
+              to="/open-sea-dragon"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🐉 Open Sea Dragon Example →
+            </Link>
+            <Link
+              to="/measurement-viewer"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium"
+            >
+              🐉 Measurement Viewer →
             </Link>
           </div>
         </div>
