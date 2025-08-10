@@ -23,9 +23,9 @@ interface WebcamViewProps {
   facingMode?: 'user' | 'environment';
 }
 
-const WebcamView: React.FC<WebcamViewProps> = ({ 
-  width = 640, 
-  height = 480, 
+const WebcamView: React.FC<WebcamViewProps> = ({
+  width = 640,
+  height = 480,
   className = "",
   facingMode = 'user'
 }) => {
@@ -64,7 +64,7 @@ const WebcamView: React.FC<WebcamViewProps> = ({
             onPlay={() => console.log('Video started playing')}
             onError={(e) => console.error('Video error:', e)}
           />
-          
+
           {/* Show start button overlay when not streaming */}
           {!isStreaming && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
@@ -76,7 +76,7 @@ const WebcamView: React.FC<WebcamViewProps> = ({
               </button>
             </div>
           )}
-          
+
           {/* Camera controls overlay */}
           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
             <div className="bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 text-xs">
@@ -86,7 +86,7 @@ const WebcamView: React.FC<WebcamViewProps> = ({
                 <span className="text-yellow-400">● READY</span>
               )}
             </div>
-            
+
             <div className="flex space-x-2">
               <button
                 onClick={() => {
@@ -107,11 +107,10 @@ const WebcamView: React.FC<WebcamViewProps> = ({
               </button>
               <button
                 onClick={isStreaming ? stopWebcam : startWebcam}
-                className={`px-3 py-1 rounded text-xs transition-colors ${
-                  isStreaming 
-                    ? 'bg-red-600 hover:bg-red-700 text-white' 
+                className={`px-3 py-1 rounded text-xs transition-colors ${isStreaming
+                    ? 'bg-red-600 hover:bg-red-700 text-white'
                     : 'bg-green-600 hover:bg-green-700 text-white'
-                }`}
+                  }`}
               >
                 {isStreaming ? 'Stop' : 'Start'}
               </button>

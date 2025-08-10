@@ -25,9 +25,9 @@ interface OpenCVWebcamViewProps {
   processingMode?: 'none' | 'edges' | 'contours' | 'threshold' | 'blur';
 }
 
-const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({ 
-  width = 640, 
-  height = 480, 
+const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
+  width = 640,
+  height = 480,
   className = "",
   facingMode = 'user',
   processingMode = 'none'
@@ -91,7 +91,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
       return;
     }
@@ -103,7 +103,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
     try {
       // Draw video frame to canvas
       ctx.drawImage(video, 0, 0);
-      
+
       if (currentMode === 'none') {
         // No processing, just show original
         return;
@@ -129,17 +129,17 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
           let gray = new cv.Mat();
           cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
           cv.threshold(gray, gray, 120, 255, cv.THRESH_BINARY);
-          
+
           let contours = new cv.MatVector();
           let hierarchy = new cv.Mat();
           cv.findContours(gray, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-          
+
           dst = src.clone();
           for (let i = 0; i < contours.size(); i++) {
             let color = new cv.Scalar(0, 255, 0, 255); // Green contours
             cv.drawContours(dst, contours, i, color, 2);
           }
-          
+
           gray.delete();
           contours.delete();
           hierarchy.delete();
@@ -164,7 +164,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
 
       // Draw processed image back to canvas
       cv.imshow(canvas, dst);
-      
+
       // Clean up
       src.delete();
       dst.delete();
@@ -180,7 +180,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
     try {
       console.log('Starting OpenCV webcam...');
       setError(null);
-      
+
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: width },
@@ -196,7 +196,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
         const video = videoRef.current;
         video.srcObject = mediaStream;
         setStream(mediaStream);
-        
+
         video.onloadedmetadata = () => {
           video.play().then(() => {
             console.log('OpenCV video playing successfully');
@@ -223,12 +223,12 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
 
   const stopWebcam = useCallback(() => {
     console.log('Stopping OpenCV webcam...');
-    
+
     // Stop animation frame
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
-    
+
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
@@ -286,7 +286,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
             muted
             style={{ display: 'none' }}
           />
-          
+
           {/* Canvas for OpenCV processing and display */}
           <canvas
             ref={canvasRef}
@@ -295,7 +295,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
             className="w-full h-full object-cover rounded-lg bg-black"
             style={{ maxWidth: '100%', maxHeight: '100%' }}
           />
-          
+
           {/* Show start button overlay when not streaming */}
           {!isStreaming && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
@@ -313,7 +313,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
               </div>
             </div>
           )}
-          
+
           {/* Camera controls overlay */}
           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
             <div className="bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 text-xs">
@@ -323,7 +323,7 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
                 <span className="text-yellow-400">● READY</span>
               )}
             </div>
-            
+
             <div className="flex space-x-2">
               <button
                 onClick={() => {
@@ -344,11 +344,10 @@ const OpenCVWebcamView: React.FC<OpenCVWebcamViewProps> = ({
               <button
                 onClick={isStreaming ? stopWebcam : startWebcam}
                 disabled={!isOpenCVReady}
-                className={`px-3 py-1 rounded text-xs transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed ${
-                  isStreaming 
-                    ? 'bg-red-600 hover:bg-red-700 text-white' 
+                className={`px-3 py-1 rounded text-xs transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed ${isStreaming
+                    ? 'bg-red-600 hover:bg-red-700 text-white'
                     : 'bg-green-600 hover:bg-green-700 text-white'
-                }`}
+                  }`}
               >
                 {isStreaming ? 'Stop' : 'Start'}
               </button>
